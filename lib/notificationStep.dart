@@ -32,8 +32,6 @@ class _NotificationStepState extends State<NotificationStep> {
     // Get consistent sizing for all pages
     final screenSize = MediaQuery.of(context).size;
     final logoSize = screenSize.width * 0.5;
-    final iconSize = screenSize.width * 0.21;
-    final mapSize = screenSize.width * 0.5;
 
     return Scaffold(
       backgroundColor: Colors.white,
