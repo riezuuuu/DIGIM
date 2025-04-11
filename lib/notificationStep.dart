@@ -29,30 +29,22 @@ class _NotificationStepState extends State<NotificationStep> {
 
   @override
   Widget build(BuildContext context) {
-    // Get consistent sizing for all pages
-    final screenSize = MediaQuery.of(context).size;
-    final logoSize = screenSize.width * 0.5;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Logo with consistent sizing (will fade out when swiping)
-          AnimatedOpacity(
-            opacity: _currentPage == 0 ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 200),
-            child: Padding(
-              padding: EdgeInsets.only(top: screenSize.height * 0.1),
+          if (_currentPage == 0) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 80.0),
               child: Center(
                 child: Image.asset(
                   'assets/images/disaster_now_logo.png',
-                  width: logoSize,
+                  width: 200,
                 ),
               ),
             ),
-          ),
-          SizedBox(height: screenSize.height * 0.02),
-
+            SizedBox(height: 20),
+          ],
           Expanded(
             child: PageView.builder(
               controller: _pageController,
@@ -63,15 +55,11 @@ class _NotificationStepState extends State<NotificationStep> {
                 });
               },
               itemBuilder: (context, index) {
-                // Pass consistent sizing to all pages
                 return _pages[index];
               },
             ),
           ),
-
-          SizedBox(height: screenSize.height * 0.04),
-
-          // Navigation indicators
+          SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(_pages.length, (index) {
@@ -84,10 +72,9 @@ class _NotificationStepState extends State<NotificationStep> {
                   );
                 },
                 child: Container(
-                  width: screenSize.width * 0.03,
-                  height: screenSize.width * 0.03,
-                  margin:
-                      EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
+                  width: 14,
+                  height: 14,
+                  margin: EdgeInsets.symmetric(horizontal: 5),
                   decoration: BoxDecoration(
                     color: _currentPage == index ? _primaryColor : Colors.white,
                     shape: BoxShape.circle,
@@ -101,10 +88,7 @@ class _NotificationStepState extends State<NotificationStep> {
               );
             }),
           ),
-
-          SizedBox(height: screenSize.height * 0.03),
-
-          // Close button
+          SizedBox(height: 20),
           GestureDetector(
             onTap: () {
               Navigator.pushReplacement(
@@ -112,12 +96,11 @@ class _NotificationStepState extends State<NotificationStep> {
             },
             child: Image.asset(
               'assets/images/close_button.png',
-              width: screenSize.width * 0.08,
-              height: screenSize.width * 0.13,
+              width: 30,
+              height: 50,
             ),
           ),
-
-          SizedBox(height: screenSize.height * 0.04),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -127,27 +110,27 @@ class _NotificationStepState extends State<NotificationStep> {
 class _NotificationStepContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Get screen size information
     final screenSize = MediaQuery.of(context).size;
-    final iconSize = screenSize.width * 0.21;
-    final mapSize = screenSize.width * 0.5;
+    final iconSize =
+        screenSize.width * 0.21; // Adjust this multiplier as needed
+    final mapSize = screenSize.width * 0.5; // Adjust this multiplier as needed
 
     return Stack(
       alignment: Alignment.center,
       clipBehavior: Clip.none,
       children: [
-        // Map with consistent size
         ClipRRect(
           borderRadius: BorderRadius.circular(7),
           child: Image.asset(
             'assets/images/map.png',
             width: mapSize,
-            height: mapSize, // Fixed height to prevent stretching
-            fit: BoxFit.cover,
           ),
         ),
-        // Icons with consistent positioning
         Positioned(
           top: screenSize.height * 0.05,
+          left: 0,
+          right: 0,
           child: _buildCircleIcon('assets/images/icon5.png', iconSize),
         ),
         Positioned(
@@ -179,7 +162,6 @@ class _NotificationStepContent extends StatelessWidget {
       assetPath,
       width: size,
       height: size,
-      fit: BoxFit.contain,
     );
   }
 }
