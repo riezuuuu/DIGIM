@@ -3,68 +3,95 @@ import 'package:flutter/material.dart';
 class NotiStep2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // Title
-          Padding(
-            padding: const EdgeInsets.only(top: 50.0),
-            child: Text(
-              "MEMBUAT ADUAN",
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.normal,
-                  color: const Color(0xFF01255B)),
-            ),
-          ),
-
-          SizedBox(height: 40), // Spacing between title and images
-
-          // Horizontal Stair-Step Layout
-          Expanded(
-            child: Center(
-              child: Stack(
-                alignment: Alignment.center,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Positioned(
-                    left: 25, // Left-most position
-                    top: 0, // Highest position
-                    child: _buildMapImage('assets/images/aduan1.png', 120),
+                  // Title
+                  Container(
+                    padding: EdgeInsets.only(top: 0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "MEMBUAT ADUAN",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.normal,
+                        color: const Color(0xFF01255B),
+                      ),
+                    ),
                   ),
-                  Positioned(
-                    left: 145, // Center position
-                    top: 60, // Medium height
-                    child: _buildMapImage('assets/images/aduan2.png', 120),
+
+                  // Image Stack
+                  Container(
+                    height: screenHeight * 0.5,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          left: screenWidth * 0.025,
+                          top: screenHeight * 0.04,
+                          child: _buildImage(
+                              'assets/images/aduan1.png', screenWidth * 0.3),
+                        ),
+                        Positioned(
+                          left: screenWidth * 0.325,
+                          top: screenHeight * 0.14,
+                          child: _buildImage(
+                              'assets/images/aduan2.png', screenWidth * 0.3),
+                        ),
+                        Positioned(
+                          left: screenWidth * 0.625,
+                          top: screenHeight * 0.22,
+                          child: _buildImage(
+                              'assets/images/aduan3.png', screenWidth * 0.3),
+                        ),
+                      ],
+                    ),
                   ),
-                  Positioned(
-                    left: 265, // Right-most position
-                    top: 120, // Lowest position
-                    child: _buildMapImage('assets/images/aduan3.png', 120),
+
+                  // Bottom Image (noti2)
+                  Container(
+                    padding: EdgeInsets.only(bottom: 30),
+                    child: Image.asset(
+                      'assets/images/noti2.png',
+                      width: screenWidth * 0.8,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-
-          // Noti2 Image at the Bottom
-          Image.asset(
-            'assets/images/noti2.png',
-            width: 310,
-            fit: BoxFit.contain,
-          ),
-
-          SizedBox(height: 100), // Bottom spacing
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildMapImage(String assetPath, double width) {
+  Widget _buildImage(String assetPath, double width) {
     return Image.asset(
       assetPath,
       width: width,
-      fit: BoxFit.cover,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: width,
+          color: Colors.grey[200],
+          child: Center(
+            child: Text('Image not found', style: TextStyle(color: Colors.red)),
+          ),
+        );
+      },
     );
   }
 }
