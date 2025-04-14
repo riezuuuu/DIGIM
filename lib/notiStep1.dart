@@ -11,7 +11,7 @@ class NotiStep1 extends StatelessWidget {
 
           // Map Image
           Expanded(
-            flex: 3, // Takes 3 parts of available space
+            flex: 3,
             child: Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -26,7 +26,7 @@ class NotiStep1 extends StatelessWidget {
 
           // Notification Image
           Expanded(
-            flex: 2, // Takes 2 parts of available space
+            flex: 2,
             child: Center(
               child: Image.asset(
                 'assets/images/noti1.png',
