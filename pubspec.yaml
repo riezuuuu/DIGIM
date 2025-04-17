@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_map: ^7.0.2
+  flutter_map: ^8.1.1
   latlong2: ^0.9.1
   http: ^1.3.0
 
@@ -94,3 +94,8 @@ flutter:
     - assets/images/rectangle.png
     - assets/images/osm_preview.png
     - assets/images/imagery_preview.png
+    - assets/images/klik.png
+    - assets/images/aduan.png
+    - assets/images/search.png
+    - assets/images/minta_bantuan.png
+    - assets/images/beri_bantuan.png

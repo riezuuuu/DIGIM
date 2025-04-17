@@ -158,89 +158,76 @@ class _NotificationStepContent extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         // Map with scale animation
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.95, end: 1.0),
-          duration: Duration(milliseconds: 300),
-          builder: (context, value, child) {
-            return Transform.scale(
-              scale: value,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(7),
-                child: Image.asset(
-                  'assets/images/map.png',
-                  width: screenSize.width * 0.5,
+        Center(
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.95, end: 1.0),
+            duration: Duration(milliseconds: 300),
+            builder: (context, value, child) {
+              return Transform.scale(
+                scale: value,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(7),
+                  child: Image.asset(
+                    'assets/images/map.png',
+                    width: screenSize.width * 0.5,
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-        // Icons with bounce animation
-        _buildAnimatedIcon(
-          'assets/images/icon5.png',
-          iconSize,
+
+        // Icons with responsive positioning
+        Positioned(
           top: screenSize.height * 0.10,
           left: 0,
           right: 0,
-          delay: 0,
+          child: _buildAnimatedIcon('assets/images/icon5.png', iconSize,
+              delay: 100),
         ),
-        _buildAnimatedIcon(
-          'assets/images/icon4.png',
-          iconSize,
+        Positioned(
           top: screenSize.height * 0.20,
           left: screenSize.width * 0.02,
-          delay: 100,
+          child: _buildAnimatedIcon('assets/images/icon4.png', iconSize,
+              delay: 100),
         ),
-        _buildAnimatedIcon(
-          'assets/images/icon2.png',
-          iconSize,
+        Positioned(
           bottom: screenSize.height * 0.20,
           right: screenSize.width * 0.02,
-          delay: 200,
+          child: _buildAnimatedIcon('assets/images/icon2.png', iconSize,
+              delay: 200),
         ),
-        _buildAnimatedIcon(
-          'assets/images/icon1.png',
-          iconSize,
+        Positioned(
           bottom: screenSize.height * 0.20,
           left: screenSize.width * 0.02,
-          delay: 150,
+          child: _buildAnimatedIcon('assets/images/icon1.png', iconSize,
+              delay: 150),
         ),
-        _buildAnimatedIcon(
-          'assets/images/icon3.png',
-          iconSize,
+        Positioned(
           top: screenSize.height * 0.20,
           right: screenSize.width * 0.02,
-          delay: 50,
+          child: _buildAnimatedIcon('assets/images/icon3.png', iconSize,
+              delay: 50),
         ),
       ],
     );
   }
 
-  Widget _buildAnimatedIcon(String assetPath, double size,
-      {double? top,
-      double? bottom,
-      double? left,
-      double? right,
-      int delay = 0}) {
-    return Positioned(
-      top: top,
-      bottom: bottom,
-      left: left,
-      right: right,
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.0, end: 1.0),
-        duration: Duration(milliseconds: 500),
-        curve: Curves.elasticOut,
-        builder: (context, value, child) {
-          return Transform.scale(
-            scale: value,
-            child: child,
-          );
-        },
-        child: Image.asset(
-          assetPath,
-          width: size,
-          height: size,
-        ),
+  Widget _buildAnimatedIcon(String assetPath, double size, {int delay = 0}) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500),
+      curve: Curves.elasticOut,
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: value,
+          child: child,
+        );
+      },
+      child: Image.asset(
+        assetPath,
+        width: size,
+        height: size,
       ),
     );
   }
