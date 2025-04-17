@@ -3,34 +3,37 @@ import 'package:flutter/material.dart';
 class NotiStep1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: 120), // Add space at the top
+          // Responsive top space
+          SizedBox(height: screenSize.height * 0.12), // ~12% of screen height
 
-          // Map Image
+          // Map Image - takes 60% of remaining space
           Expanded(
-            flex: 3,
+            flex: 6, // 60% of available space
             child: Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
                   'assets/images/map2.png',
-                  width: 250,
+                  width: screenSize.width * 0.72, // 70% of screen width
                   fit: BoxFit.contain,
                 ),
               ),
             ),
           ),
 
-          // Notification Image
+          // Notification Image - takes 40% of remaining space
           Expanded(
-            flex: 2,
+            flex: 4, // 40% of available space
             child: Center(
               child: Image.asset(
                 'assets/images/noti1.png',
-                width: 260,
+                width: screenSize.width * 0.72, // 72% of screen width
                 fit: BoxFit.contain,
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'pengenalan.dart';
+import 'dart:async'; // Add this import for Timer
 
 class Utama extends StatefulWidget {
   @override
@@ -19,6 +20,31 @@ class _UtamaState extends State<Utama> {
   int _selectedIndex = 1;
   String _tileLayerUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
   bool _showBasemapSelector = false;
+  bool _showActionButtons = false;
+  double _actionButtonsScale = 0.0; // For scaling animation
+  double _actionButtonsOpacity = 0.0; // For fade animation
+  final List<Map<String, dynamic>> _actionButtons = [
+    {
+      'icon': 'assets/images/beri_bantuan.png',
+      'text': 'Beri Bantuan',
+      'color': Color(0xFF7D7C7E),
+    },
+    {
+      'icon': 'assets/images/minta_bantuan.png',
+      'text': 'Minta Bantuan',
+      'color': Color(0xFF7D7C7E),
+    },
+    {
+      'icon': 'assets/images/search.png',
+      'text': 'Carian Aduan',
+      'color': Color(0xFF397981),
+    },
+    {
+      'icon': 'assets/images/aduan.png',
+      'text': 'Aduan',
+      'color': Color(0xFF395581),
+    },
+  ];
 
   @override
   void initState() {
@@ -165,6 +191,60 @@ class _UtamaState extends State<Utama> {
     }
   }
 
+  // Klik button handler remains the same
+  void _handleKlikTap() async {
+    setState(() {
+      _showActionButtons = !_showActionButtons;
+      if (_showActionButtons) {
+        _actionButtonsScale = 0.0;
+        _actionButtonsOpacity = 0.0;
+      }
+    });
+
+    if (_showActionButtons) {
+      await Future.delayed(Duration(milliseconds: 50));
+      if (!mounted) return;
+      setState(() {
+        _actionButtonsScale = 1.0;
+        _actionButtonsOpacity = 1.0;
+      });
+    } else {
+      setState(() {
+        _actionButtonsScale = 0.0;
+        _actionButtonsOpacity = 0.0;
+      });
+    }
+  }
+
+// Action button handler
+  void _handleActionButtonTap(int index) {
+    print('${_actionButtons[index]['text']} tapped');
+    setState(() {
+      _showActionButtons = false;
+      _actionButtonsScale = 0.0;
+      _actionButtonsOpacity = 0.0;
+    });
+  }
+
+  // Helper functions to maintain consistent visual size - MOVE THESE INSIDE THE CLASS
+  double _getIconWidth(String iconPath) {
+    switch (iconPath) {
+      case 'assets/images/minta_bantuan.png':
+        return 18; // Slightly wider icon
+      default:
+        return 24;
+    }
+  }
+
+  double _getIconHeight(String iconPath) {
+    switch (iconPath) {
+      case 'assets/images/minta_bantuan.png':
+        return 22; // Slightly taller icon
+      default:
+        return 24;
+    }
+  }
+
   Widget _buildIconButton(String assetPath, VoidCallback onPressed) {
     return Padding(
       padding: EdgeInsets.only(bottom: 5),
@@ -286,6 +366,93 @@ class _UtamaState extends State<Utama> {
           ],
         ),
       ),
+    );
+  }
+
+  // Special layout for Aduan button
+  Widget _buildCenteredAduanButton(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 30,
+          height: 30,
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 40,
+              maxHeight: 40,
+            ),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: _getIconWidth(_actionButtons[index]['icon']),
+                  height: _getIconHeight(_actionButtons[index]['icon']),
+                  child: Image.asset(_actionButtons[index]['icon']),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 7),
+        Text(
+          _actionButtons[index]['text'],
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ],
+    );
+  }
+
+// Normal layout for other buttons
+  Widget _buildNormalButton(int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(width: 10),
+        Container(
+          width: 30,
+          height: 30,
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 40,
+              maxHeight: 40,
+            ),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: _getIconWidth(_actionButtons[index]['icon']),
+                  height: _getIconHeight(_actionButtons[index]['icon']),
+                  child: Image.asset(_actionButtons[index]['icon']),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 7),
+        Expanded(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _actionButtons[index]['text'],
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -509,6 +676,75 @@ class _UtamaState extends State<Utama> {
               ),
             ),
           ),
+
+          //Klik buttons
+          Positioned(
+            bottom: 90,
+            right: 10,
+            child: SizedBox(
+              width: 70,
+              height: 70,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Klik Button
+                  GestureDetector(
+                    onTap: _handleKlikTap,
+                    child: Image.asset(
+                      'assets/images/klik.png',
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+
+                  // Action Buttons
+                  if (_showActionButtons)
+                    Positioned(
+                      bottom: 70,
+                      right: 3,
+                      child: AnimatedOpacity(
+                        opacity: _actionButtonsOpacity,
+                        duration: Duration(milliseconds: 300),
+                        child: Transform.scale(
+                          scale: _actionButtonsScale,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(
+                              _actionButtons.length,
+                              (i) => Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                                child: GestureDetector(
+                                  onTap: () => _handleActionButtonTap(i),
+                                  child: Container(
+                                    width: 170,
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      color: _actionButtons[i]['color'],
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 6,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: _actionButtons[i]['text'] == 'Aduan'
+                                        ? _buildCenteredAduanButton(i)
+                                        : _buildNormalButton(i),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
